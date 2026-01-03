@@ -1,48 +1,28 @@
-# GarageM8 - Project Overview
+# BookMe - Project Overview
 
 ## Vision
-A straightforward garage management platform that makes booking routine vehicle services as easy as ordering takeout, while giving garage owners simple tools to manage their day without overwhelming their techs.
+A straightforward booking management platform that facilitates booking management for small businesses.
+Think nail/hair, small garages, private practitioners offering a variety of services, from small to large.
+Rather than managing phones, streamline things and increase your sales rates by allowing users to simply book online.
 
 ## Core Philosophy
-- **High-volume, high-predictability services first** (oil changes, tire rotations, brake jobs)
+- **High-volume, high-predictability services first**
 - **Low activation energy** for customers - see price, see availability, book in seconds
-- **Minimal status complexity** - three states only: Not Started, In Progress, Ready for Pickup
-- **Keep techs turning wrenches** - no phone/tablet babysitting required
+- **Minimal status complexity** - three states only: Not Started, In Progress, Complete
 
 ---
 
 ## Target Market
 
-**Primary:** Independent, single-location garages
-- 2-6 technicians
-- Mix of appointments and walk-ins
+**Primary:** Independent small, local businesses
 - Currently using paper schedules or basic spreadsheets
 - Want to attract more customers without adding administrative overhead
-
-**Secondary (Future):** Small chains (2-3 locations) with shared customer base
 
 ---
 
 ## User Personas
 
-### Customer (Sarah - Busy Professional)
-- Needs oil change every 3-4 months
-- Wants to know: price, when can you do it, how long will it take
-- Checks phone for updates between meetings
-- Frustrated by "we'll call you when it's ready" black holes
-
-### Garage Owner (Mike - Shop Owner)
-- Runs a 4-bay independent shop
-- Juggles walk-ins with appointments
-- Things always take longer than estimated
-- Needs to shift appointments when diagnosis reveals bigger issues
-- Wants more predictable revenue from advance bookings
-
-### Technician (Carlos - Lead Tech)
-- Hands are usually dirty or holding tools
-- Doesn't want to update software every 10 minutes
-- Needs to see his queue for the day
-- Sometimes discovers additional issues mid-service
+ADD USER PERSONAS
 
 ---
 
@@ -63,18 +43,16 @@ A straightforward garage management platform that makes booking routine vehicle 
 - Reschedule if garage needs to adjust timeline
 
 #### 3. Customer Account
-- Basic profile (name, phone, email, vehicle info)
-- Appointment history
-- Saved vehicle preferences for faster rebooking
+- Basic profile (name, phone, email)
+- Appointment history, should be scoped based on the specific reference business
 
-### Garage Management Side ("Master Panel")
+### Business Management Side ("Master Panel")
 
 #### 1. Service Catalog Management
 - Define services with:
   - Name, description
   - Base price
   - Estimated duration
-  - Required supplies/parts (future: inventory integration)
 - Enable/disable services
 - Adjust pricing and timing
 
@@ -85,16 +63,9 @@ A straightforward garage management platform that makes booking routine vehicle 
 - Show gaps in schedule (useful for walk-ins)
 - Override capacity when needed (intentional overbooking)
 
-#### 3. Tech Dashboard (Simple Kanban)
-- Three columns: Not Started | In Progress | Complete
-- Each card shows: customer name, vehicle, service, time booked
-- Drag cards between columns (triggers status updates)
-- Add notes to appointment (internal only)
-- Flag for "needs customer contact" (additional work discovered)
-
-#### 4. Customer Management
+#### 3. Customer Management
 - Search customer history
-- View past services per vehicle
+- View past services
 - Contact information
 - Notes/flags (e.g., "always runs late", "prefers text")
 
@@ -135,39 +106,6 @@ A straightforward garage management platform that makes booking routine vehicle 
 3. Tech flags appointment: "Customer Approval Needed"
 4. Receptionist calls customer with recommendation and new timeline
 5. If approved, receptionist books follow-up slot or extends current appointment
-
----
-
-## Technical Scope
-
-### In Scope (MVP)
-- Customer web portal (mobile-responsive)
-- Garage admin panel (desktop-focused)
-- Fixed service catalog with pricing
-- Calendar-based scheduling with availability
-- Three-state status tracking
-- Basic customer accounts and vehicle records
-- SMS/email notifications
-- Simple tech Kanban board
-
-### Explicitly Out of Scope (MVP)
-- Complex diagnostic workflows
-- Detailed progress tracking (percentage complete, specific tasks)
-- Inventory management
-- Parts ordering integration
-- Payment processing (handle at pickup counter)
-- Multi-location support
-- Franchise/chain features
-- Mobile app (native) - responsive web is sufficient
-- Tech mobile interface beyond basic Kanban
-
-### Future Considerations
-- Integration with parts suppliers
-- Payment processing
-- Customer loyalty programs
-- Review/rating system
-- Fleet management for commercial accounts
-- Advanced analytics and reporting
 
 ---
 
@@ -215,7 +153,7 @@ A straightforward garage management platform that makes booking routine vehicle 
 
 ### Business Model
 **Subscription-based pricing** (similar to Jane app model for practitioners)
-- Garages pay monthly/annual subscription to access the platform
+- Businesses pay monthly/annual subscription to access the platform
 - Pricing tiers based on features or number of bookings (TBD)
 
 ### Walk-In Handling
@@ -228,39 +166,20 @@ A straightforward garage management platform that makes booking routine vehicle 
 **No explicit buffer time between appointments**
 - Service duration estimates should include realistic time padding
 - Example: Oil change might be 20 min actual work, but listed as 30 min service duration
-- Shops factor in cleanup, vehicle movement, unexpected delays into the service time itself
+- Businesses factor in setup/teardown, unexpected delays
 - Keeps scheduling simple and predictable
 
 ### Customer Authentication
-**Email/password per garage**
+**Email/password for the platform**
 - Standard email/password signup and login
 - Customers create separate accounts per garage they visit
 - Future consideration: Federated identity if customer uses multiple garages
 
-### Garage Onboarding
+### Business Onboarding
 **Individually assisted setup**
-- Manual onboarding for each garage (not self-service initially)
+- Manual onboarding for each business (not self-service initially)
 - Ensures quality control and proper configuration
 - Opportunity to train staff on the system
 - Can gather feedback during early adoption phase
 
 ---
-
-## Open Questions (New)
-
-1. **Subscription pricing tiers**: Single flat rate or tiered based on features/volume?
-2. **Walk-in gap detection**: Should system highlight "fillable gaps" or leave that to garage discretion?
-3. **Multi-garage customer accounts**: Future feature or ignore for now?
-4. **Service duration padding**: Should system suggest padding amounts or let garages figure it out?
-5. **Trial period**: Offer free trial before subscription starts?
-
----
-
-## Next Steps
-
-1. Define technology stack (frontend, backend, database, hosting)
-2. Create wireframes for key screens
-3. Design database schema
-4. Develop user stories and acceptance criteria
-5. Set up development environment
-6. Build MVP feature by feature
