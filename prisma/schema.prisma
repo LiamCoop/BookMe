@@ -80,6 +80,7 @@ model Service {
   business Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
   bookings Booking[]
 
+  @@unique([businessId, name])
   @@index([businessId])
 }
 

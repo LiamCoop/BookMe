@@ -1,63 +1,128 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ServiceCard } from "@/components/service-card"
 import { ServiceDialog } from "@/components/service-dialog"
 import type { Service } from "@/types/service"
 
-const initialServices: Service[] = [
-  {
-    id: "1",
-    businessId: "temp-business-id", // TODO: Replace with actual business ID from auth
-    name: "Basic Haircut",
-    description: "A classic haircut with wash and styling",
-    price: 45,
-    duration: 30,
-  },
-  {
-    id: "2",
-    businessId: "temp-business-id",
-    name: "Deep Conditioning Treatment",
-    description: "Intensive moisture therapy for damaged hair",
-    price: 75,
-    duration: 45,
-  },
-  {
-    id: "3",
-    businessId: "temp-business-id",
-    name: "Full Color Service",
-    description: "Complete color application with toning and styling",
-    price: 150,
-    duration: 120,
-  },
-]
+// TODO: In production, get this from authenticated user's business
+const TEST_BUSINESS_ID = "cmjz1im8c0002oxwdeq20g33g"
 
 export function ServiceManager() {
-  const [services, setServices] = useState<Service[]>(initialServices)
+  const [services, setServices] = useState<Service[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleAddService = (service: Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
-    const newService: Service = {
-      ...service,
-      id: Date.now().toString(),
-      businessId: "temp-business-id", // TODO: Replace with actual business ID from auth
+  // Fetch services on mount
+  useEffect(() => {
+    fetchServices()
+  }, [])
+
+  const fetchServices = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      const response = await fetch(`/api/services?businessId=${TEST_BUSINESS_ID}`)
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch services")
+      }
+
+      const data = await response.json()
+      setServices(data)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+      console.error("Error fetching services:", err)
+    } finally {
+      setIsLoading(false)
     }
-    setServices([...services, newService])
-    setIsDialogOpen(false)
   }
 
-  const handleUpdateService = (updatedService: Service | Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
-    if ("id" in updatedService) {
-      setServices(services.map((service) => (service.id === updatedService.id ? updatedService : service)))
+  const handleAddService = async (service: Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
+    try {
+      setError(null)
+      const response = await fetch("/api/services", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...service,
+          businessId: TEST_BUSINESS_ID,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to create service")
+      }
+
+      const newService = await response.json()
+      setServices([newService, ...services])
+      setIsDialogOpen(false)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+      console.error("Error creating service:", err)
     }
-    setEditingService(null)
   }
 
-  const handleDeleteService = (id: string) => {
-    setServices(services.filter((service) => service.id !== id))
+  const handleUpdateService = async (updatedService: Service | Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
+    if (!("id" in updatedService)) return
+
+    try {
+      setError(null)
+      const response = await fetch(`/api/services/${updatedService.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: updatedService.name,
+          description: updatedService.description,
+          price: updatedService.price,
+          duration: updatedService.duration,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to update service")
+      }
+
+      const updated = await response.json()
+      setServices(services.map((service) => (service.id === updated.id ? updated : service)))
+      setEditingService(null)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+      console.error("Error updating service:", err)
+    }
+  }
+
+  const handleDeleteService = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this service?")) {
+      return
+    }
+
+    try {
+      setError(null)
+      const response = await fetch(`/api/services/${id}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete service")
+      }
+
+      setServices(services.filter((service) => service.id !== id))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
+      console.error("Error deleting service:", err)
+    }
   }
 
   const handleEdit = (service: Service) => {
@@ -85,6 +150,7 @@ export function ServiceManager() {
           <Button
             onClick={() => setIsDialogOpen(true)}
             className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+            disabled={isLoading}
           >
             <Plus className="h-4 w-4" />
             Add Service
@@ -92,7 +158,20 @@ export function ServiceManager() {
         </div>
       </div>
 
-      {services.length === 0 ? (
+      {error && (
+        <div className="mb-6 rounded-lg border border-destructive bg-destructive/10 p-4">
+          <p className="text-sm text-destructive">{error}</p>
+        </div>
+      )}
+
+      {isLoading ? (
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-sm text-muted-foreground">Loading services...</p>
+          </div>
+        </div>
+      ) : services.length === 0 ? (
         <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed border-border bg-card">
           <div className="text-center">
             <h3 className="text-lg font-medium text-card-foreground">No services yet</h3>
