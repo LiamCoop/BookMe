@@ -20,7 +20,7 @@ import type { Service } from "@/types/service"
 interface ServiceDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (service: Service | Omit<Service, "id">) => void
+  onSubmit: (service: Service | Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => void
   onClose: () => void
   service?: Service | null
 }
@@ -62,8 +62,9 @@ export function ServiceDialog({ open, onOpenChange, onSubmit, onClose, service }
     }
 
     if (service) {
-      onSubmit({ ...serviceData, id: service.id })
+      onSubmit({ ...serviceData, id: service.id, businessId: service.businessId })
     } else {
+      // For new services, businessId will be added by the parent component
       onSubmit(serviceData)
     }
 

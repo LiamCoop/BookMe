@@ -10,6 +10,7 @@ import type { Service } from "@/types/service"
 const initialServices: Service[] = [
   {
     id: "1",
+    businessId: "temp-business-id", // TODO: Replace with actual business ID from auth
     name: "Basic Haircut",
     description: "A classic haircut with wash and styling",
     price: 45,
@@ -17,6 +18,7 @@ const initialServices: Service[] = [
   },
   {
     id: "2",
+    businessId: "temp-business-id",
     name: "Deep Conditioning Treatment",
     description: "Intensive moisture therapy for damaged hair",
     price: 75,
@@ -24,6 +26,7 @@ const initialServices: Service[] = [
   },
   {
     id: "3",
+    businessId: "temp-business-id",
     name: "Full Color Service",
     description: "Complete color application with toning and styling",
     price: 150,
@@ -36,16 +39,17 @@ export function ServiceManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
 
-  const handleAddService = (service: Omit<Service, "id">) => {
+  const handleAddService = (service: Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
     const newService: Service = {
       ...service,
       id: Date.now().toString(),
+      businessId: "temp-business-id", // TODO: Replace with actual business ID from auth
     }
     setServices([...services, newService])
     setIsDialogOpen(false)
   }
 
-  const handleUpdateService = (updatedService: Service | Omit<Service, "id">) => {
+  const handleUpdateService = (updatedService: Service | Omit<Service, "id" | "businessId" | "createdAt" | "updatedAt">) => {
     if ("id" in updatedService) {
       setServices(services.map((service) => (service.id === updatedService.id ? updatedService : service)))
     }
