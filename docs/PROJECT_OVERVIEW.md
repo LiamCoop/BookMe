@@ -38,9 +38,9 @@ ADD USER PERSONAS
 
 #### 2. Appointment Management
 - View upcoming appointments
-- Receive status updates (Not Started → In Progress → Ready for Pickup)
+- Receive status updates (Not Started → In Progress → Complete)
 - Simple notifications (SMS/email preference)
-- Reschedule if garage needs to adjust timeline
+- Reschedule if business needs to adjust timeline
 
 #### 3. Customer Account
 - Basic profile (name, phone, email)
@@ -73,39 +73,39 @@ ADD USER PERSONAS
 
 ## Key Workflows
 
-### Happy Path: Simple Oil Change
+### Happy Path: Standard Service Booking
 
 1. **Customer books online**
-   - Selects "Oil Change" ($49.99, 30 min)
+   - Selects service (e.g., "Haircut & Style" $45, 45 min)
    - Sees next available slot: Tomorrow 2:00 PM
    - Books → receives confirmation
 
 2. **Day of service**
-   - Customer drops off car at 2:00 PM
-   - Receptionist checks them in (appointment moves to "Not Started" queue)
-   - Tech Carlos sees card on Kanban, drags to "In Progress" at 2:15 PM
-   - Customer receives "We've started on your vehicle" notification
+   - Customer arrives at 2:00 PM
+   - Front desk checks them in (appointment moves to "Not Started" queue)
+   - Service provider sees appointment, marks as "In Progress" at 2:15 PM
+   - Customer receives "Your appointment has started" notification
 
 3. **Service completes**
-   - Carlos drags card to "Complete" at 2:50 PM
-   - Customer receives "Your vehicle is ready for pickup" notification
-   - Customer picks up, pays, leaves happy
+   - Provider marks appointment as "Complete" at 2:50 PM
+   - Customer receives "Your service is complete" notification
+   - Customer checks out, pays, leaves satisfied
 
 ### Realistic Path: Service Runs Over
 
-1. Tech discovers work will take 20 minutes longer
-2. System alerts receptionist: "2:30 PM appointment will be delayed"
-3. Receptionist sees suggested new time slots for delayed customers
+1. Service provider discovers work will take 20 minutes longer
+2. System alerts front desk: "2:30 PM appointment will be delayed"
+3. Front desk sees suggested new time slots for affected customers
 4. Clicks "Notify affected customers" → automated messages sent with reschedule options
 5. Customers can accept new time or pick different slot
 
-### Edge Case: Diagnostic Request
+### Edge Case: Additional Services Needed
 
-1. Customer books "General Inspection" with description: "weird noise from front left"
-2. Tech performs inspection, determines needs brake replacement
-3. Tech flags appointment: "Customer Approval Needed"
-4. Receptionist calls customer with recommendation and new timeline
-5. If approved, receptionist books follow-up slot or extends current appointment
+1. Customer books standard service with description field noting specific concerns
+2. Service provider assesses and determines additional work is needed
+3. Provider flags appointment: "Customer Approval Needed"
+4. Front desk contacts customer with recommendation and updated timeline/pricing
+5. If approved, front desk books follow-up slot or extends current appointment
 
 ---
 
@@ -117,11 +117,11 @@ ADD USER PERSONAS
 - Average time to book appointment
 - Customer satisfaction with status updates
 
-### Garage Side
+### Business Side
 - Daily schedule fill rate
 - Average time to input/manage appointments vs. previous system
-- Reduction in "where's my car" phone calls
-- Tech adoption rate (using Kanban without resistance)
+- Reduction in status inquiry calls/messages
+- Staff adoption rate and ease of use feedback
 
 ---
 
@@ -129,8 +129,8 @@ ADD USER PERSONAS
 
 ### Ease of Use
 - Customer booking flow: max 3 clicks after login
-- Garage schedule view: glanceable, minimal scrolling
-- Tech interface: big touch targets, minimal text input
+- Business schedule view: glanceable, minimal scrolling
+- Staff interface: big touch targets, minimal text input
 
 ### Performance
 - Page loads: < 2 seconds
@@ -145,7 +145,7 @@ ADD USER PERSONAS
 ### Accessibility
 - WCAG 2.1 AA compliance
 - Mobile responsive (customer side)
-- Works on older tablets (tech interface)
+- Works on older tablets (staff interface)
 
 ---
 
@@ -158,22 +158,22 @@ ADD USER PERSONAS
 
 ### Walk-In Handling
 - Walk-ins can be **turned away** or **fit into existing gaps** in the schedule
-- During transition period, garages may maintain multiple streams (legacy + GarageM8)
+- During transition period, businesses may maintain multiple streams (legacy + BookMe)
 - System should show available gaps in schedule that could accommodate walk-ins
 - No requirement to force walk-ins into the booking system initially
 
 ### Buffer Time Strategy
 **No explicit buffer time between appointments**
 - Service duration estimates should include realistic time padding
-- Example: Oil change might be 20 min actual work, but listed as 30 min service duration
-- Businesses factor in setup/teardown, unexpected delays
+- Example: A haircut might be 30 min actual work, but listed as 45 min service duration
+- Businesses factor in setup/teardown, unexpected delays, and customer transitions
 - Keeps scheduling simple and predictable
 
 ### Customer Authentication
 **Email/password for the platform**
 - Standard email/password signup and login
-- Customers create separate accounts per garage they visit
-- Future consideration: Federated identity if customer uses multiple garages
+- Customers create separate accounts per business they visit
+- Future consideration: Federated identity if customer uses multiple businesses
 
 ### Business Onboarding
 **Individually assisted setup**

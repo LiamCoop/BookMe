@@ -2,3 +2,5 @@
 .next
 .claude
 node_modules
+
+/app/generated/prisma
